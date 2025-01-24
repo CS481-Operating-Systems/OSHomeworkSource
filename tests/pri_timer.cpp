@@ -1,4 +1,4 @@
-#include "cs_481_hw_src/src.hpp"
+#include "src.hpp"
 #include "timer.h"
 
 int counter;

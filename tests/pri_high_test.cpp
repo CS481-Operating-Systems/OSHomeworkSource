@@ -8,7 +8,7 @@
 #include <limits.h>
 
 #include "gtest/gtest.h"
-#include "cs_481_hw_src/src.hpp"
+#include "src.hpp"
 
 int counter;
 void job0(int time)

@@ -1,4 +1,5 @@
 include_directories(${hw_INCDIR})
+include_directories(${src_INCDIR})
 
 add_executable(proc_run_test proc_run_test.cpp)
 target_link_libraries(proc_run_test homework gtest)
