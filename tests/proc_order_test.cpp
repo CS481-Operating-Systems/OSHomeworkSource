@@ -12,51 +12,55 @@ FILE* fn;
 void grandchild()
 {
     fn = fopen("./procs.output", "w");
-    fprintf(fn, "Grandchild\n");
+    int pid = getpid();
+    fprintf(fn, "Grandchild %d\n", pid);
+    fflush(fn);
     fclose(fn);
 }
 
 void child()
 {
     fn = fopen("./procs.output", "a");
-    fprintf(fn, "Child\n");
+    int pid = getpid();
+    fprintf(fn, "Child %d\n", pid);
+    fflush(fn);
     fclose(fn);
 }
 
 void parent()
 {
     fn = fopen("./procs.output", "a");
-    fprintf(fn, "Parent\n");
+    int pid = getpid();
+    fprintf(fn, "Parent %d\n", pid);
+    fflush(fn);
     fclose(fn);
 }
 
 TEST(ProcessOrderTest, TestsInTests)
 {
-    int rc = fork();
     int pid = getpid();
+    run_processes();
 
-    if (rc == 0)
-    {
-        run_processes();
-        exit(1);
-    }
-    else
-    {
-        wait(NULL);
+    fn = fopen("./procs.output", "r");
 
-        const char* comparisons[3] = {"Grandchild", "Child", "Parent"};
+    char buff[255];
+    int pid_g, pid_c, pid_p;
+    fscanf(fn, "%s\n", buff);
+    ASSERT_STREQ(buff, "Grandchild");
+    fscanf(fn, "%d\n", &pid_g);
+    fscanf(fn, "%s\n", buff);
+    ASSERT_STREQ(buff, "Child");
+    fscanf(fn, "%d\n", &pid_c);
+    fscanf(fn, "%s\n", buff);
+    ASSERT_STREQ(buff, "Parent");
+    fscanf(fn, "%d\n", &pid_p);
 
-        fn = fopen("./procs.output", "r");
+    fclose(fn);
 
-        char buff[255];
-        for (int i = 0; i < 3; i++)
-        {
-            fscanf(fn, "%s\n", buff);
-             ASSERT_STREQ(buff, comparisons[i]);
-        }
-
-        fclose(fn);
-    }
+    ASSERT_EQ(pid, pid_p);
+    ASSERT_NE(pid_p, pid_c);
+    ASSERT_NE(pid_p, pid_g);
+    ASSERT_NE(pid_c, pid_g);
 }
 
 
