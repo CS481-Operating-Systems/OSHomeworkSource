@@ -7,6 +7,7 @@
 #include "gtest/gtest.h"
 #include "src.hpp"
 
+int counter = 0;
 
 void grandchild()
 {
@@ -14,6 +15,7 @@ void grandchild()
 
 void child()
 {
+    counter++;
 }
 
 void parent()
@@ -28,6 +30,8 @@ TEST(ProcessOrderTest, TestsInTests)
         run_processes();
 
         ASSERT_EQ(getpid(), pid);
+        ASSERT_LT(0, counter);
+        printf("%d\n", counter);
     }
 }
 
