@@ -41,6 +41,9 @@ TEST(ProcessOrderTest, TestsInTests)
     int pid = getpid();
     run_processes();
 
+    if (getpid() != pid)
+        exit(0);
+
     fn = fopen("./procs.output", "r");
 
     char buff[255];
