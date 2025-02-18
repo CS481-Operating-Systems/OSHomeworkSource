@@ -22,6 +22,7 @@ class PTE
             protect_bit = 0;
             valid_bit = 1;
             present_bit = 0;
+            can_access = not protect_bit;
         }
 
         ~PTE()
@@ -35,17 +36,14 @@ class PTE
             protect_bit = _protect_bit;
             valid_bit = _valid_bit;
             present_bit = 1;
-        }
-
-        bool can_access()
-        {
-            return not protect_bit;
+            can_access = not protect_bit;
         }
 
         int PFN;
         int protect_bit;
         int valid_bit;
         int present_bit;
+        bool can_access;
 };
 
 
@@ -72,9 +70,9 @@ class PageTable
             entries[VPN]->update_entry(PFN, protect_bit, valid_bit);
         }
 
-        PTE* lookup(int VPN)
+        void lookup(int VPN, PTE** entry)
         {
-            return entries[VPN];
+            *entry = entries[VPN];
         }
 
 
@@ -96,6 +94,7 @@ class TLB_entry
             protect_bit = 0;
             valid_bit = 0;
             idx = 0;
+            can_access = not protect_bit;
         }
 
         ~TLB_entry()
@@ -110,17 +109,14 @@ class TLB_entry
             protect_bit = _protect_bit;
             idx = _idx;
             valid_bit = 1;
-        }
-
-        bool can_access()
-        {
-            return not protect_bit;
+            can_access = not protect_bit;
         }
 
         int tag;
         int PFN;
         int protect_bit;
         int valid_bit;
+        bool can_access;
         int idx;
 };
 

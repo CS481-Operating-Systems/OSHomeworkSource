@@ -1,24 +1,29 @@
 #include "src.hpp"
 
+#define TLB_MISS "TLB Miss!"
+#define PROTECT_FAULT "Protection Fault!"
+#define SEG_FAULT "Segmentation Fault!"
+#define PAGE_FAULT "Page Fault!"
+
 
 void protection_fault()
 {
-    throw "Protection Fault!";
+    throw PROTECT_FAULT;
 }
 
 void segmentation_fault()
 {
-    throw "Segmentation Fault!";
+    throw SEG_FAULT;
 }
 
 void page_fault()
 {
-    throw "Page Fault!";
+    throw PAGE_FAULT;
 }
 
 void tlb_miss()
 {
-    throw "TLB Miss!";
+    throw TLB_MISS;
 }
 
 
