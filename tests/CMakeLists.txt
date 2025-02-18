@@ -112,8 +112,6 @@ target_link_libraries(test_clock_lru_steps homework gtest)
 add_test(TestClockLRUSteps ./test_clock_lru_steps)
 
 
-
-### Standard Unit Tests (Originally Provided To You)
 add_executable(unit_tests unit_tests.cpp)
 target_link_libraries(unit_tests homework gtest)
 add_test(UnitTests ./unit_tests)

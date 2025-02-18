@@ -7,7 +7,8 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-
+#include <string>
+#include <math.h>
 
 
 /***********************************
@@ -22,7 +23,6 @@ class PTE
             protect_bit = 0;
             valid_bit = 1;
             present_bit = 0;
-            can_access = not protect_bit;
         }
 
         ~PTE()
@@ -36,14 +36,12 @@ class PTE
             protect_bit = _protect_bit;
             valid_bit = _valid_bit;
             present_bit = 1;
-            can_access = not protect_bit;
         }
 
         int PFN;
         int protect_bit;
         int valid_bit;
         int present_bit;
-        bool can_access;
 };
 
 
