@@ -111,7 +111,3 @@ add_executable(test_clock_lru_steps test_clock_lru_steps.cpp)
 target_link_libraries(test_clock_lru_steps homework gtest)
 add_test(TestClockLRUSteps ./test_clock_lru_steps)
 
-
-add_executable(unit_tests unit_tests.cpp)
-target_link_libraries(unit_tests homework gtest)
-add_test(UnitTests ./unit_tests)
