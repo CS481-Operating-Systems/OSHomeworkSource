@@ -67,7 +67,7 @@ TEST(TLBTest, TestsIntests)
     }
     ASSERT_EQ(exception, true);
 
-    tlb->add_entry(3, 16, table->entries[68]);
+    tlb->add_entry(0, 17, table->entries[68]);
     try
     {
         exception = false;
