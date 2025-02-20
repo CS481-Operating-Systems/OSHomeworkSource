@@ -25,6 +25,7 @@ TEST(PageTableTest, TestsIntests)
     int page_size = 4;
     int virtual_address;
 
+    TLB* tlb = new TLB();
     tlb->add_entry(2, 1, entry);
     virtual_address = 24;
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
