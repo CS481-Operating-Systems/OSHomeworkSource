@@ -41,8 +41,7 @@ TEST(PageTableTest, TestsIntests)
     ASSERT_EQ(exception, true);
 
 
-    PTE* entry = new PTE();
-    entry->update_entry(8, 10, 0, 1);
+    table->add_page(8, 10, 0, 1);
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     ASSERT_EQ(addr, 80);
 
@@ -52,10 +51,6 @@ TEST(PageTableTest, TestsIntests)
     
 
 
-
-
-
     delete tlb;
     delete table; 
-    delete entry;
 }
