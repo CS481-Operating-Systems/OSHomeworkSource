@@ -40,8 +40,7 @@ TEST(PageTableTest, TestsIntests)
     }
     ASSERT_EQ(exception, true);
 
-
-    tlb->add_entry(2, 3, 13);
+    table->add_entry(14, 13, 0, 1);
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     ASSERT_EQ(addr, 104);
 
