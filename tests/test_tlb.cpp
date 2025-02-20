@@ -26,9 +26,9 @@ TEST(TLBTest, TestsIntests)
 
 
     TLB* tlb = new TLB(4,4);
-    tlb->add_entry(0, 16, table->entries[64]));
-    tlb->add_entry(1, 16, table->entries[65]));
-    tlb->add_entry(2, 16, table->entries[66]));
+    tlb->add_entry(0, 16, table->entries[64]);
+    tlb->add_entry(1, 16, table->entries[65]);
+    tlb->add_entry(2, 16, table->entries[66]);
 
     PFN = TLB_lookup(tlb, 64);
     ASSERT_EQ(PFN, 256);
