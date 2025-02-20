@@ -18,11 +18,19 @@ TEST(TLBTest, TestsIntests)
 {
     int PFN;
     bool exception;
+
+    PageTable* table = new PageTable(128);
+    table->add_page(64, 256, 1, 1);
+    table->add_page(65, 312, 1, 1);
+    table->add_page(66, 1024, 1, 1);
+    table->add_page(67, 0, 1, 1);
+
+
     TLB* tlb = new TLB(4,4);
-    tlb->add_entry(0, 16, 256, 1);
-    tlb->add_entry(1, 16, 312, 1);
-    tlb->add_entry(2, 16, 1024, 1);
-    tlb->add_entry(3, 16, 0, 1);
+    tlb->add_entry(0, 16, table->entries[64]);
+    tlb->add_entry(1, 16, table->entries[65]);
+    tlb->add_entry(2, 16, table->entries[66]);
+    tlb->add_entry(3, 16, table->entries[67]);
 
 
     try

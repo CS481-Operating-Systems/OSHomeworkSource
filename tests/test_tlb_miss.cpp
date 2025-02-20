@@ -17,12 +17,19 @@ int main(int argc, char** argv)
 TEST(TLBTest, TestsIntests)
 {
     bool exception;
-    TLB* tlb = new TLB(4,4);
-    tlb->add_entry(0, 16, 256);
-    tlb->add_entry(1, 16, 312);
-    tlb->add_entry(2, 16, 1024);
-    tlb->add_entry(3, 16, 0, 1);
 
+    PageTable* table = new PageTable(128);
+    table->add_page(64, 256, 0, 1);
+    table->add_page(65, 312, 0, 1);
+    table->add_page(66, 1024, 0, 1);
+    table->add_page(67, 0, 1, 1);
+    table->add_page(68, 120, 1, 1);
+
+    TLB* tlb = new TLB(4,4);
+    tlb->add_entry(0, 16, table->entries[64]);
+    tlb->add_entry(1, 16, table->entries[65]);
+    tlb->add_entry(2, 16, table->entries[66]);
+    tlb->add_entry(3, 16, table->entries[67]);
     try
     {
         exception = false;
@@ -38,8 +45,7 @@ TEST(TLBTest, TestsIntests)
     try
     {
         exception = false;
-        int PFN = TLB_lookup(tlb, 0);
-        printf("PFN %d\n", PFN);
+        TLB_lookup(tlb, 0);
     }
     catch (const char* msg)
     {
