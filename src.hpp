@@ -88,11 +88,9 @@ class TLB_entry
         TLB_entry()
         {
             tag = 0;
-            PFN = 0;
-            protect_bit = 0;
+            last_access = 0;
             valid_bit = 0;
-            idx = 0;
-            can_access = not protect_bit;
+            entry = NULL;
         }
 
         ~TLB_entry()
@@ -100,22 +98,18 @@ class TLB_entry
 
         }
 
-        void update_entry(int _tag, int _PFN, int _protect_bit = 0, int _idx = 0)
+        void update_entry(int _tag, PTE* _entry, int _last_access)
         {
             tag = _tag;
-            PFN = _PFN;
-            protect_bit = _protect_bit;
-            idx = _idx;
+            entry = _entry;
+            last_access = _last_access;
             valid_bit = 1;
-            can_access = not protect_bit;
         }
 
         int tag;
-        int PFN;
-        int protect_bit;
+        PTE* entry;
         int valid_bit;
-        bool can_access;
-        int idx;
+        int last_access;
 };
 
 class TLB_set
@@ -143,14 +137,14 @@ class TLB_set
                 entries[i] = new TLB_entry();
         }
 
-        void add_entry(int tag, int PFN, int protect_bit = 0)
+        void add_entry(int tag, PTE* entry)
         {
             // If available spot in set, add TLB entry
             for (int i = 0; i < set_size; i++)
             {
                 if (entries[i]->valid_bit == 0)
                 {
-                    entries[i]->update_entry(tag, PFN, protect_bit, counter++);
+                    entries[i]->update_entry(tag, entry counter++);
                     return;
                 }
             }
@@ -168,16 +162,18 @@ class TLB_set
                     min_counter = entries[i]->idx;
                 }
             }
-            entries[min_idx]->update_entry(tag, PFN, protect_bit, counter++);
+            entries[min_idx]->update_entry(tag, entry, counter++);
         }
 
-        bool lookup(int tag, TLB_entry** entry)
+        bool lookup(int tag, PTE** entry)
         {
+            *entry = NULL;
+
             for (int i = 0; i < set_size; i++)
             {
                 if (entries[i]->tag == tag && entries[i]->valid_bit==1)
                 {
-                    *entry = entries[i];
+                    *entry = entries[i]->entry;
                     return true;
                 }
             }
@@ -206,12 +202,12 @@ class TLB
 
         }
 
-        void add_entry(int idx, int tag, int PFN, int protect_bit = 0)
+        void add_entry(int idx, int tag, PTE* entry)
         {
-            sets[idx].add_entry(tag, PFN, protect_bit);
+            sets[idx].add_entry(tag, entry);
         }
         
-        bool lookup(int idx, int tag, TLB_entry** entry)
+        bool lookup(int idx, int tag, PTE** entry)
         {
             return sets[idx].lookup(tag, entry); 
         }
