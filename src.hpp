@@ -144,7 +144,7 @@ class TLB_set
             {
                 if (entries[i]->valid_bit == 0)
                 {
-                    entries[i]->update_entry(tag, entry counter++);
+                    entries[i]->update_entry(tag, entry, counter++);
                     return;
                 }
             }
@@ -156,10 +156,10 @@ class TLB_set
             int min_idx = -1;
             for (int i = 0; i < set_size; i++)
             {
-                if (entries[i]->idx < min_counter)
+                if (entries[i]->last_access < min_counter)
                 {
                     min_idx = i;
-                    min_counter = entries[i]->idx;
+                    min_counter = entries[i]->last_access;
                 }
             }
             entries[min_idx]->update_entry(tag, entry, counter++);
