@@ -1,6 +1,11 @@
 #ifndef TEST_SRC_HPP
 #define TEST_SRC_HPP
 
+#define TLB_MISS "tlb_miss"
+#define PROTECT_FAULT "protect_fault"
+#define SEG_FAULT "seg_fault"
+#define PAGE_FAULT "page_fault"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
