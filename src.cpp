@@ -1,9 +1,9 @@
 #include "src.hpp"
 
-#define TLB_MISS "TLB Miss!"
-#define PROTECT_FAULT "Protection Fault!"
-#define SEG_FAULT "Segmentation Fault!"
-#define PAGE_FAULT "Page Fault!"
+#define TLB_MISS "tlb_miss"
+#define PROTECT_FAULT "protect_fault"
+#define SEG_FAULT "seg_fault"
+#define PAGE_FAULT "page_fault"
 
 
 void protection_fault()
