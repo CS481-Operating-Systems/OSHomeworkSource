@@ -37,7 +37,7 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "TLB Miss!");
+        ASSERT_STREQ(msg, TLB_MISS);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -49,7 +49,7 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "TLB Miss!");
+        ASSERT_STREQ(msg, TLB_MISS);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -61,7 +61,7 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "TLB Miss!");
+        ASSERT_STREQ(msg, TLB_MISS);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -73,7 +73,7 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "TLB Miss!");
+        ASSERT_STREQ(msg, TLB_MISS);
         exception = true;
     }
     ASSERT_EQ(exception, true);

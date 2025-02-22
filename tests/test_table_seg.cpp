@@ -33,7 +33,7 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "Segmentation Fault!");
+        ASSERT_STREQ(msg, SEG_FAULT);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -46,7 +46,7 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "Segmentation Fault!");
+        ASSERT_STREQ(msg, SEG_FAULT);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -59,7 +59,7 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "Segmentation Fault!");
+        ASSERT_STREQ(msg, SEG_FAULT);
         exception = true;
     }
     ASSERT_EQ(exception, true);
@@ -72,7 +72,7 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, "Segmentation Fault!");
+        ASSERT_STREQ(msg, SEG_FAULT);
         exception = true;
     }
     ASSERT_EQ(exception, true);
