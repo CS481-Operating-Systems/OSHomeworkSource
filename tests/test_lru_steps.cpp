@@ -17,8 +17,10 @@ int main(int argc, char** argv)
 TEST(VPNTest, TestsIntests)
 {
     int count;
+    int list_len = 0;
     int idx = 0;
     FrameList* head = new FrameList(idx++);
+    list_len++;
     FrameList* tail = head;
     FrameList* remove_frame;
     for (int i = 0; i < 10; i++)
@@ -26,11 +28,14 @@ TEST(VPNTest, TestsIntests)
         FrameList* next = new FrameList(idx++);
         tail->next = next;
         tail = next;
+        list_len++;
     }
     count = lru(head, &remove_frame);
     ASSERT_EQ(remove_frame->idx, 0);
+    ASSERT_EQ(count, list_len);
     head = remove_frame->next;
     delete remove_frame;
+    list_len--;
 
     tail = head;
     for (int i = 0; i < 5; i++)
@@ -40,6 +45,7 @@ TEST(VPNTest, TestsIntests)
     }
     count = lru(head, &remove_frame);
     ASSERT_EQ(remove_frame->idx, 6);
+    ASSERT_EQ(count, list_len);
     tail = head;
     while (tail->next)
     {
@@ -47,6 +53,7 @@ TEST(VPNTest, TestsIntests)
         {
             tail->next = remove_frame->next;
             delete remove_frame;
+            list_len--;
             break;
         }
         tail = tail->next;
@@ -61,6 +68,7 @@ TEST(VPNTest, TestsIntests)
     }
     count = lru(head, &remove_frame);
     ASSERT_EQ(remove_frame->idx, 8);
+    ASSERT_EQ(count, list_len);
 
 }
 
