@@ -5,7 +5,7 @@
 // while EXPECT_* variants continue with the run.
 
 #include "gtest/gtest.h"
-#include "cs_481_hw_src/src.hpp"
+#include "src.hpp"
 #include <math.h>
 
 int main(int argc, char** argv)
