@@ -9,6 +9,10 @@ add_executable(test_producer_consumer_cond2 test_producer_consumer2.cpp)
 target_link_libraries(test_producer_consumer_cond2 cond_var gtest )
 add_test(TestCondProducerConsumer2 ./test_producer_consumer_cond2)
 
+add_executable(test_pc_cond_while test_pc_while.cpp)
+target_link_libraries(test_pc_cond_while cond_var gtest)
+add_test(TestCondProducerConsumerWhile ./test_pc_cond_while)
+
 
 ## Producer Consumer with Semaphore
 add_executable(test_producer_consumer_sem test_producer_consumer.cpp)
