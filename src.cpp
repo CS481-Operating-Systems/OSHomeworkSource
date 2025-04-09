@@ -1,4 +1,5 @@
 #include "src.hpp"
+#include "stdio.h"
 
 void eat(diners_t* diner)
 {
