@@ -11,7 +11,11 @@ lock_t my_lock;
 int val;
 bool first;
 bool finished0, finished1;
-bool thread0bool, thread1bool;
+int value = 1;
+bool unlocked;
+bool guard_bool;
+bool flag_bool;
+bool is_queue_empty;
 
 void queue_sig_handler(int signum)
 {
@@ -20,12 +24,28 @@ void queue_sig_handler(int signum)
 void* thread0(void* arg)
 {
     lock(&my_lock);
-    while (queue_empty(my_lock.queue)) 
-        sched_yield();
-    unlock(&my_lock);
-    thread0bool = first==true;
 
-    finished0 = true;
+    // Wait for other thread to enter the queue
+    while (queue_empty(my_lock.queue))
+    {
+        if (my_lock.guard > 1 || my_lock.guard < 0)
+        {
+            guard_bool = false;
+            return NULL;
+        }
+        if (my_lock.flag != 1)
+        {
+            flag_bool = false;
+            return NULL;
+        }
+        sched_yield();
+    }
+    
+    // Release the lock
+    unlock(&my_lock);
+
+    // unlock should remove them from queue
+    is_queue_empty = queue_empty(my_lock.queue);
 
     return NULL;
 }
@@ -33,8 +53,6 @@ void* thread0(void* arg)
 void* thread1(void* arg)
 {
     signal(SIGUSR1, queue_sig_handler);
-    thread1bool = first==false;
-    first = true;
     lock(&my_lock);
     unlock(&my_lock);
     
@@ -52,25 +70,39 @@ int main(int argc, char** argv)
 TEST(TLBTest, TestsIntests)
 {
     init(&my_lock);
-    first = false;
     finished0 = finished1 = false;
+    flag_bool = true;
+    guard_bool = true;
     ASSERT_EQ(my_lock.queue.initialized, 1234);
 
     pthread_t pthread0;
     pthread_t pthread1;
 
+    // Create first thread, which will grab lock and wait for second thread to enter queue
     pthread_create(&pthread0, NULL, thread0, NULL);
+
+    // Spin until first thread has acquired lock
+    while (my_lock.flag == 0)
+    {
+        sched_yield();
+    }
+
+    // Create second thread, should enter queue
     pthread_create(&pthread1, NULL, thread1, NULL);
+
     pthread_join(pthread0, NULL);
+    ASSERT_EQ(flag_bool, true);
+    ASSERT_EQ(guard_bool, true);
+    ASSERT_EQ(is_queue_empty, true);
+
+    // Possible for pause to cause thread to get stuck
+    // This will make sure they wake up
     while (!finished1)
     {
         pthread_kill(pthread1, SIGUSR1);
         sched_yield();
     }
     pthread_join(pthread1, NULL);
-
-    ASSERT_EQ(thread0bool, true);
-    ASSERT_EQ(thread1bool, true);
 
     destroy(&my_lock);
 }
