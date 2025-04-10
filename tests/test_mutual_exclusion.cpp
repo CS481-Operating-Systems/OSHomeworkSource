@@ -9,7 +9,7 @@
 
 lock_t my_lock;
 volatile int value = 0;
-int n_loops = 10;
+int n_loops = 10000;
 int* finished;
 
 void queue_sig_handler(int signum)
