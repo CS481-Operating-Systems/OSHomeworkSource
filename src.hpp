@@ -34,16 +34,16 @@ pthread_t queue_remove(queue_t& queue);
 typedef struct __lock_t
 {
     // Needed for ticket locks
-    int ticket;
+    volatile int ticket;
     volatile int turn;
 
     // Needed for semaphore lock
-    int S;
+    volatile int S;
     pthread_mutex_t mutex; 
 
     // Needed for queue lock
-    int flag;
-    int guard;
+    volatile int flag;
+    volatile int guard;
     queue_t queue;
 } lock_t;
 
