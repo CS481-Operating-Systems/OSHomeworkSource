@@ -1,7 +1,7 @@
 #include "src.hpp"
+#include <random>
+#include <thread>
 
-int my_rand_ctr;
-long* my_rand_vals;
 
 // Initialize Queue Methods
 void queue_init(queue_t& queue)
@@ -48,7 +48,7 @@ void queue_destroy(queue_t& queue)
 
 
 // Compute PI Helper
-double pthread_compute_pi(int num_threads, int num_samples, int init_rand)
+double pthread_compute_pi(int num_threads, int num_samples)
 {
     calc_t* pi_calc = (calc_t*)malloc(sizeof(calc_t));
     pi_calc->global_sum = 0;
@@ -59,10 +59,6 @@ double pthread_compute_pi(int num_threads, int num_samples, int init_rand)
     thread_data_t* thread_data = (thread_data_t*)malloc(num_threads*sizeof(thread_data_t));
 
     init(&(pi_calc->lock));
-
-    if (init_rand)
-        rand_init(num_samples);
-    else my_rand_ctr = 0;
 
     for (int i = 0; i < num_threads; i++)
     {
@@ -76,9 +72,6 @@ double pthread_compute_pi(int num_threads, int num_samples, int init_rand)
     free(threads);
     free(thread_data);
 
-    if (init_rand)
-        rand_destroy();    
-
     destroy(&(pi_calc->lock));
     
     return 4.0 * pi_calc->global_sum / (1.0*num_samples);
@@ -87,24 +80,20 @@ double pthread_compute_pi(int num_threads, int num_samples, int init_rand)
 // Thread Safe Random Value Generator 
 void rand_init(int global_n)
 {
-    my_rand_ctr = 0;
-    my_rand_vals = (long*)malloc(2*global_n*sizeof(long));
 
-    srand(time(NULL));
-    for (int i = 0; i < 2*global_n; i++)
-        my_rand_vals[i] = rand();
 }
 
 void rand_destroy()
 {
-    free(my_rand_vals);
 }
 
 int thread_rand()
 {
-    // Atomically update to avoid two threads grabbing same random value
-    int idx = __sync_fetch_and_add(&my_rand_ctr, 1);
-    return my_rand_vals[idx];
+    size_t tid = std::hash<std::thread::id>{}(std::this_thread::get_id());
+    thread_local static std::mt19937 gen(time(NULL) + tid);
+    std::uniform_int_distribution<int> dist(1, RAND_MAX);
+
+    return dist(gen);
 }
 
 double serial_compute_pi(int num_samples, int init_rand)
@@ -113,9 +102,6 @@ double serial_compute_pi(int num_samples, int init_rand)
 
     // Initializes thread-safe random value generator 
     // Do NOT include this in your compute_pi method
-    if (init_rand)
-        rand_init(num_samples);
-    else my_rand_ctr = 0;
 
     double global_sum = 0;
 
@@ -131,8 +117,6 @@ double serial_compute_pi(int num_samples, int init_rand)
 
     // Frees thread-safe random value generator 
     // Do NOT include this in your compute_pi method
-    if (init_rand)
-        rand_destroy(); 
 
     return 4.0 * global_sum / (1.0*num_samples);
     
