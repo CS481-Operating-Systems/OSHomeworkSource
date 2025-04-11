@@ -21,10 +21,8 @@ void* thread(void* arg)
     int* id = (int*)arg;
 
     lock(&my_lock);
-    __sync_synchronize();
     for (int i = 0; i < n_loops; i++) 
         value++;
-    __sync_synchronize();
     unlock(&my_lock);
 
     finished[*id] = 1;
