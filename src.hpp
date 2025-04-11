@@ -35,7 +35,7 @@ typedef struct __lock_t
 {
     // Needed for ticket locks
     int ticket;
-    int turn;
+    volatile int turn;
 
     // Needed for semaphore lock
     int S;
