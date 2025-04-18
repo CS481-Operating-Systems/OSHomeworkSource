@@ -39,14 +39,15 @@ TEST(TLBTest, TestsIntests)
     for (int i = 0; i < n_p; i++)
         pthread_join(threads[i], NULL);
 
-    int* return_val;
     int ctr = 0;
     int val_ctr = 0;
     for (int i = 0; i < n_c; i++)
     {
+        int* return_val;
         pthread_join(threads[n_p+i], (void**)&return_val);
         ctr += i;
         val_ctr += *return_val;
+        free(return_val);
     }
     ASSERT_EQ(ctr, val_ctr);
 

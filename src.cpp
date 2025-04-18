@@ -44,6 +44,23 @@ void init(buffer_t* buf, int limit)
     pthread_cond_init(&(buf->full), NULL);
     pthread_cond_init(&(buf->empty), NULL);
     pthread_mutex_init(&(buf->mutex), NULL);
+
+    // If named semaphore already exists
+    // delete and unlink it
+    buf->sem_empty = sem_open("empty", 0);
+    if (buf->sem_empty != SEM_FAILED)
+    {
+        sem_close(buf->sem_empty);
+        sem_unlink("empty");
+    }
+    buf->sem_full = sem_open("full", 0);
+    if (buf->sem_full != SEM_FAILED)
+    {
+        sem_close(buf->sem_full);
+        sem_unlink("full");
+    }
+
+
     buf->sem_empty = sem_open("empty", O_CREAT, S_IRUSR | S_IWUSR, limit);
     buf->sem_full = sem_open("full", O_CREAT, S_IRUSR | S_IWUSR, 0);
 }

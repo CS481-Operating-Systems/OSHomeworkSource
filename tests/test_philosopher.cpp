@@ -30,6 +30,15 @@ TEST(TLBTest, TestsIntests)
     {
         eat[i] = false;
         snprintf(buf, 10, "forks_%d", i);
+
+        // If semaphore already exists, delete
+        forks[i] = sem_open(buf, 0);
+        if (forks[i] != SEM_FAILED)
+        {
+            sem_close(forks[i]);
+            sem_unlink(buf);
+        }
+
         forks[i] = sem_open(buf, O_CREAT, S_IRUSR | S_IWUSR, 1);
     }
 
