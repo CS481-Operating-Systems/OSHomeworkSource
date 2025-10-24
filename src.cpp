@@ -25,6 +25,7 @@ void queue_add(queue_t& queue, pthread_t thread)
     new_node->next = NULL;
     new_node->thread = thread;
     queue.tail->next = new_node;
+    queue.tail = new_node;
     queue.size++; 
 }
 
