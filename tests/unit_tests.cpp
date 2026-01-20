@@ -1,6 +1,6 @@
 #include "src.hpp"
 
-## Test file checks correctness
+// Test file checks correctness
 int main(int argc, char** argv)
 {
     // If value returned from method does not equal 0, fail test
