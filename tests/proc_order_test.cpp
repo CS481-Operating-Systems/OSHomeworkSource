@@ -33,6 +33,7 @@ void parent()
 int main(int argc, char** argv)
 {
     int pid = getpid();
+    remove("./procs.output");
     run_processes();
 
     fn = fopen("./procs.output", "r");

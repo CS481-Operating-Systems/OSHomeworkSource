@@ -32,6 +32,7 @@ void parent()
 int main(int argc, char** argv)
 {
     int pid;
+    remove("./procs.output");
     run_processes();
 
     // Sleep for half a second in case parent returns
