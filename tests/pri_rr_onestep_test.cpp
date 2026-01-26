@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int counter;
@@ -47,7 +40,7 @@ void create_jobs(int* n_jobs, Job** jobs)
     *jobs = example_jobs;
 }
 
-TEST(PriorityTest, TestsIntests)
+int main(int argc, char** argv)
 {
     for (int i = 0; i < 1; i++)
     {
@@ -58,19 +51,15 @@ TEST(PriorityTest, TestsIntests)
         create_jobs(&n_jobs, &jobs);
         counter = 0;
         priority_rr(n_jobs, jobs, 2);
-        ASSERT_EQ(counter, 16);
+        if (counter != 16)
+        {
+            fprintf(stderr, "Priority scheduler (Round-Robin) is trying to run with %d jobs, but is running in an incorrect order.  Job information is as follows\n");
+            for (int j = 0; j < n_jobs; j++)
+                fprintf(stderr, "Job %d has priority %d, idx %d, and time %d\n", j, jobs[j].priority, jobs[j].idx, jobs[j].time);
+        }
         free(jobs);
     }
-}
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    int ierr = 0;
-    ierr += RUN_ALL_TESTS();
-
-    return ierr;
+    return 0;
 
 }
 

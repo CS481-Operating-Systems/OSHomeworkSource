@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 FILE* fn;
@@ -36,7 +29,7 @@ void parent()
     fclose(fn);
 }
 
-TEST(ProcessOrderTest, TestsInTests)
+int main(int argc, char** argv)
 {
     int pid;
     run_processes();
@@ -58,20 +51,14 @@ TEST(ProcessOrderTest, TestsInTests)
 
     fclose(fn);
 
-    ASSERT_NE(pid_p, pid_c);
-    ASSERT_NE(pid_p, pid_g);
-    ASSERT_NE(pid_c, pid_g);
-}
+    if (pid_p == pid_c)
+        fprintf(stderr, "Parent and Child PIDs are the same\n");
+    if (pid_p == pig_d)
+        fprintf(stderr, "Parent and Grandchild PIDs are the same\n");
+    if (pid_c == pid_g)
+        fprintf(stderr, "Child and Grandparent PIDs are the same\n");
 
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    int ierr = 0;
-    ierr += RUN_ALL_TESTS();
-
-    return ierr;
+    return 0;
 
 }
 

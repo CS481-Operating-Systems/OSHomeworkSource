@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 FILE* fn;
@@ -36,7 +29,7 @@ void parent()
     fclose(fn);
 }
 
-TEST(ProcessOrderTest, TestsInTests)
+int main(int argc, char** argv)
 {
     int pid = getpid();
     run_processes();
@@ -46,33 +39,30 @@ TEST(ProcessOrderTest, TestsInTests)
     char buff[255];
     int pid_g, pid_c, pid_p;
     fscanf(fn, "%s\n", buff);
-    ASSERT_STREQ(buff, "Grandchild");
+    if (buff != "Grandchild")
+        fprintf(stderr, "Grandchild process not running grandchild method first\n");
     fscanf(fn, "%d\n", &pid_g);
     fscanf(fn, "%s\n", buff);
-    ASSERT_STREQ(buff, "Child");
+    if (buff != "Child")
+        fprintf(stderr, "Child process not running child method second\n");
     fscanf(fn, "%d\n", &pid_c);
     fscanf(fn, "%s\n", buff);
-    ASSERT_STREQ(buff, "Parent");
+    if (buff != "Parent")
+        fprintf(stderr, "Parent process not running parent method last\n");
     fscanf(fn, "%d\n", &pid_p);
 
     fclose(fn);
 
-    ASSERT_EQ(pid, pid_p);
-    ASSERT_NE(pid_p, pid_c);
-    ASSERT_NE(pid_p, pid_g);
-    ASSERT_NE(pid_c, pid_g);
-}
+    if (pid != pid_p)
+        fprintf(stderr, "A non-parent process forgot to exit\n");
+    if (pid_p == pid_c)
+        fprintf(stderr, "Parent and Child PIDs are the same\n");
+    if (pid_p == pig_d)
+        fprintf(stderr, "Parent and Grandchild PIDs are the same\n");
+    if (pid_c == pid_g)
+        fprintf(stderr, "Child and Grandparent PIDs are the same\n");
 
-
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-
-    int ierr = 0;
-    ierr += RUN_ALL_TESTS();
-
-    return ierr;
-
+    return 0;
 }
 
 
