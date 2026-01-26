@@ -56,6 +56,8 @@ int main(int argc, char** argv)
             fprintf(stderr, "Priority scheduler (Round-Robin) is trying to run with %d jobs, but is running in an incorrect order.  Job information is as follows\n");
             for (int j = 0; j < n_jobs; j++)
                 fprintf(stderr, "Job %d has priority %d, idx %d, and time %d\n", j, jobs[j].priority, jobs[j].idx, jobs[j].time);
+            free(jobs);
+            return 1;
         }
         free(jobs);
     }

@@ -59,7 +59,10 @@ int main(int argc, char** argv)
         }
 
         free(jobs);
+        return 1;
     }
+
+    free(jobs);
     return 0;
 }
 
