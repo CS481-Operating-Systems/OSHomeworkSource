@@ -40,22 +40,6 @@ void create_jobs(int* n_jobs, Job** jobs)
     *jobs = example_jobs;
 }
 
-TEST(PriorityTest, TestsIntests)
-{
-    for (int i = 0; i < 1; i++)
-    {
-        int n_jobs;
-        Job* jobs;
-
-        // Run Test
-        create_jobs(&n_jobs, &jobs);
-        counter = 0;
-        priority(n_jobs, jobs);
-        ASSERT_EQ(counter, 17);
-        free(jobs);
-    }
-}
-
 int main(int argc, char** argv)
 {
     for (int i = 0; i < 1; i++)
@@ -69,7 +53,7 @@ int main(int argc, char** argv)
         priority(n_jobs, jobs);
         if (counter != 17)
         {
-            fprintf(stderr, "Priority scheduler (FIFO) is trying to run with %d jobs, but is running in an incorrect order.  Job information is as follows\n");
+            fprintf(stderr, "Priority scheduler (FIFO) is trying to run with %d jobs, but is running in an incorrect order.  Job information is as follows\n", n_jobs);
             for (int j = 0; j < n_jobs; j++)
                 fprintf(stderr, "Job %d has priority %d, idx %d, and time %d\n", j, jobs[j].priority, jobs[j].idx, jobs[j].time);
         }

@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
     if (pid_p == pid_c)
         fprintf(stderr, "Parent and Child PIDs are the same\n");
-    if (pid_p == pig_d)
+    if (pid_p == pid_g)
         fprintf(stderr, "Parent and Grandchild PIDs are the same\n");
     if (pid_c == pid_g)
         fprintf(stderr, "Child and Grandparent PIDs are the same\n");
