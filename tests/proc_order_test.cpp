@@ -39,30 +39,67 @@ int main(int argc, char** argv)
     run_processes();
 
     fn = fopen("./procs.output", "r");
+    if (fn == NULL) {
+        fprintf(stderr, "No parent/child/grandchild process called the appropriate routines.\n");
+        return 1;
+    }
 
     char buff[255];
     int pid_g, pid_c, pid_p;
-    fscanf(fn, "%s\n", buff);
+    int ret;
+
+
+    ret = fscanf(fn, "%s\n", buff);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
     if (strcmp(buff, "Grandchild") != 0) 
     {
         fprintf(stderr, "Grandchild process not running grandchild method first\n");
         return 1;
     }
-    fscanf(fn, "%d\n", &pid_g);
-    fscanf(fn, "%s\n", buff);
+    ret = fscanf(fn, "%d\n", &pid_g);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
+    ret = fscanf(fn, "%s\n", buff);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
     if (strcmp(buff, "Child") != 0)
     {
         fprintf(stderr, "Child process not running child method second\n");
         return 1;
     }
-    fscanf(fn, "%d\n", &pid_c);
-    fscanf(fn, "%s\n", buff);
+    ret = fscanf(fn, "%d\n", &pid_c);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
+    ret = fscanf(fn, "%s\n", buff);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
     if (strcmp(buff, "Parent") != 0)
     {
         fprintf(stderr, "Parent process not running parent method last\n");
         return 1;
     }
-    fscanf(fn, "%d\n", &pid_p);
+    ret = fscanf(fn, "%d\n", &pid_p);
+    if (ret == EOF)
+    {
+        fprintf(stderr, "At least one of your processes did not call the appropriate routines.\n");
+        return 1;
+    }
 
     fclose(fn);
 

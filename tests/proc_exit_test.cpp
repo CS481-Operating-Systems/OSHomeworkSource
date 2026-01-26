@@ -35,6 +35,13 @@ int main(int argc, char** argv)
     remove("./procs.output");
     run_processes();
 
+    fn = fopen("./procs.output", "r");
+    if (fn == NULL) {
+        fprintf(stderr, "No parent/child/grandchild process called the appropriate routines.\n");
+        return 1;
+    }
+    fclose(fn);
+    
 
     if (getpid() != pid)
     {
