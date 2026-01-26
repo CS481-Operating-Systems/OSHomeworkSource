@@ -1,4 +1,5 @@
 #include "src.hpp"
+#include <string.h>
 
 FILE* fn;
 
@@ -34,6 +35,7 @@ int main(int argc, char** argv)
 {
     int pid = getpid();
     remove("./procs.output");
+
     run_processes();
 
     fn = fopen("./procs.output", "r");
@@ -41,21 +43,21 @@ int main(int argc, char** argv)
     char buff[255];
     int pid_g, pid_c, pid_p;
     fscanf(fn, "%s\n", buff);
-    if (buff != "Grandchild")
+    if (strcmp(buff, "Grandchild") != 0) 
     {
         fprintf(stderr, "Grandchild process not running grandchild method first\n");
         return 1;
     }
     fscanf(fn, "%d\n", &pid_g);
     fscanf(fn, "%s\n", buff);
-    if (buff != "Child")
+    if (strcmp(buff, "Child") != 0)
     {
         fprintf(stderr, "Child process not running child method second\n");
         return 1;
     }
     fscanf(fn, "%d\n", &pid_c);
     fscanf(fn, "%s\n", buff);
-    if (buff != "Parent")
+    if (strcmp(buff, "Parent") != 0)
     {
         fprintf(stderr, "Parent process not running parent method last\n");
         return 1;
