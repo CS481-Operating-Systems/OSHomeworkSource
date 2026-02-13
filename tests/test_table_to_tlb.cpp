@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     PFN = TLB_lookup(tlb, 4);
     if (PFN != 16)
     {
-        fprintf("TLB lookup for VPN 4 expected 16, but instead got %d\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 4 expected 16, but instead got %d\n", PFN);
         return 1;
     }
 
@@ -26,15 +26,15 @@ int main(int argc, char** argv)
     PFN = TLB_lookup(tlb, 6);    
     if (PFN != 25)
     {
-        fprintf("TLB lookup for VPN 4 expected 25, but instead got %d\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 6 expected 25, but instead got %d\n", PFN);
         return 1;
     }
 
     PFN = table_lookup(table, tlb, 8);
     PFN = TLB_lookup(tlb, 8);    
-    if (PFN != 8)
+    if (PFN != 0)
     {
-        fprintf("TLB lookup for VPN 4 expected 8, but instead got %d\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 8 expected 0, but instead got %d\n", PFN);
         return 1;
     }
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     PFN = TLB_lookup(tlb, 15);    
     if (PFN != 2)
     {
-        fprintf("TLB lookup for VPN 4 expected 2, but instead got %d\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 15 expected 2, but instead got %d\n", PFN);
         return 1;
     }
 

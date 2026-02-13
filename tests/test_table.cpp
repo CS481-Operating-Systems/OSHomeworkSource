@@ -36,10 +36,9 @@ int main(int argc, char** argv)
         }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
     if (not exception)
     {
-        fprintf(stderr, "table lookup for VPN 6 expected protection fault but instead succeeded.\n", PFN);
+        fprintf(stderr, "table lookup for VPN 6 expected protection fault but instead succeeded.\n");
         return 1;
     }
 
@@ -58,10 +57,9 @@ int main(int argc, char** argv)
         }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
     if (not exception)
     {
-        fprintf(stderr, "table lookup for VPN 8 expected segfault but instead succeeded.\n", PFN);
+        fprintf(stderr, "table lookup for VPN 8 expected segfault but instead succeeded.\n");
         return 1;
     }
 
@@ -80,10 +78,9 @@ int main(int argc, char** argv)
         }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
     if (not exception)
     {
-        fprintf(stderr, "table lookup for VPN 15 expected segfault but instead succeeded.\n", PFN);
+        fprintf(stderr, "table lookup for VPN 15 expected segfault but instead succeeded.\n");
         return 1;
     }
 
@@ -103,10 +100,9 @@ int main(int argc, char** argv)
         }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
     if (not exception)
     {
-        fprintf(stderr, "table lookup for VPN 2 expected page fault but instead succeeded.\n", PFN);
+        fprintf(stderr, "table lookup for VPN 2 expected page fault but instead succeeded.\n");
         return 1;
     }
 

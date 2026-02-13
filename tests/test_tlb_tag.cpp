@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 
     VPN = 19;
     split_VPN(VPN, k, &index, &tag);
-    expected = 8;
+    expected = 4;
     if (tag != expected)
     {
         fprintf(stderr, "split VPN with VPN %d, k %d, returned tag %d, expected %d\n",

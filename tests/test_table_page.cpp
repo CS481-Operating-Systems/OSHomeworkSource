@@ -30,7 +30,6 @@ int main(int argc, char** argv)
         }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
     if (not exception)
     {
         fprintf(stderr, "Expected PAGE FAULT but received no exception\n");

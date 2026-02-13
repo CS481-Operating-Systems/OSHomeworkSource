@@ -27,14 +27,16 @@ int main(int argc, char** argv)
     {
         if (strcmp(msg, SEG_FAULT) != 0)
         {
-            fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but got %s\n", msg);
+            fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but got %s\n", 
+                    virtual_address, page_size, msg);
             return 1;
         }
         exception = true;
     }
     if (not exception)
     {
-        fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but succeeded\n", msg);
+        fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but succeeded\n",
+                virtual_address, page_size);
         return 1;
     }
 
@@ -43,7 +45,8 @@ int main(int argc, char** argv)
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     if (addr != 96)
     {
-        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 96\n");
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 96\n",
+                virtual_address, page_size, addr);
         return 1;
     }
 
@@ -51,7 +54,8 @@ int main(int argc, char** argv)
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     if (addr != 103)
     {
-        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 103\n");
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 103\n",
+                virtual_address, page_size, addr);
         return 1;
     }
 

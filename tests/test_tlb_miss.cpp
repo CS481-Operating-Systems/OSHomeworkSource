@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     }
     if (not exception)
     {
-        fprintf(stderr, "TLB lookup for VPN 68 expected TLB MISS.\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 68 expected TLB MISS.\n");
         return 1;
     }
 
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     }
     if (not exception)
     {
-        fprintf(stderr, "TLB lookup for VPN 0 expected TLB MISS.\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 0 expected TLB MISS.\n");
         return 1;
     }
 
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     }
     if (not exception)
     {
-        fprintf(stderr, "TLB lookup for VPN 123 expected TLB MISS.\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 123 expected TLB MISS.\n");
         return 1;
     }
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     }
     if (not exception)
     {
-        fprintf(stderr, "TLB lookup for VPN 37 expected TLB MISS.\n", PFN);
+        fprintf(stderr, "TLB lookup for VPN 37 expected TLB MISS.\n");
         return 1;
     }
 

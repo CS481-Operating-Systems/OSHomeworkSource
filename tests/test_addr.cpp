@@ -1,6 +1,6 @@
 #include "src.hpp"
 
-void print_err(PFN, offset, page_size, addr, expected)
+void print_err(int PFN, int offset, int page_size, int addr, int expected)
 {
     fprintf(stderr, "Physical address of PFN %d, offset %d, page size %d: returned %d, should be %d\n", 
                 PFN, offset, page_size, addr, expected);
@@ -22,7 +22,6 @@ int main(int argc, char** argv)
 
     offset = 1;
     addr = get_physical_address(PFN, offset, page_size);
-    ASSERT_EQ(addr, 9);
     if (addr != 9)
     {
         print_err(PFN, offset, page_size, addr, 9);
