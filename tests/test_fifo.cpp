@@ -2,9 +2,8 @@
 
 int main(int argc, char** argv)
 {
-
-    FrameList* remove_frame;
     int count;
+    FrameList* remove_frame;
     int idx = 0;
     FrameList* head = new FrameList(idx++);
     FrameList* tail = head;

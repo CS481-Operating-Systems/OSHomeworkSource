@@ -19,7 +19,8 @@ int main(int argc, char** argv)
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     if (addr != 64)
     {
-        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 64\n");
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 64\n",
+                virtual_address, page_size, addr);
         return 1;
     }
 
@@ -27,7 +28,8 @@ int main(int argc, char** argv)
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
     if (addr != 67)
     {
-        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 67\n");
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 67\n",
+                virtual_address, page_size, addr);
         return 1;
     }
 

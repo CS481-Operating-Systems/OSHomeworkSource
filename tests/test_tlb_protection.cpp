@@ -2,7 +2,6 @@
 
 int main(int argc, char** argv)
 {
-    int PFN;
     bool exception;
 
     PageTable* table = new PageTable(128);

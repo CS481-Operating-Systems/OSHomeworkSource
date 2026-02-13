@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     expected = 256;
     if (PFN != expected)
     {
-        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", PFN, expected);
+        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", VPN, PFN, expected);
         return 1;
     }
 
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     expected = 312;
     if (PFN != expected)
     {
-        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", PFN, expected);
+        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", VPN, PFN, expected);
         return 1;
     }
 
@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     expected = 1024;
     if (PFN != expected)
     {
-        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", PFN, expected);
+        fprintf(stderr, "TLB lookup for VPN %d returned %d, expected %d\n", VPN, PFN, expected);
         return 1;
     }
 

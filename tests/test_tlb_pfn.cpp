@@ -28,28 +28,28 @@ int main(int argc, char** argv)
     PFN = TLB_lookup(tlb, 64);
     if (PFN != 256)
     {
-        fprintf(stderr, "TLB lookup of VPN returned %d, expected 256\n");
+        fprintf(stderr, "TLB lookup of VPN returned %d, expected 256\n", PFN);
         return 1;
     }
 
     PFN = TLB_lookup(tlb, 65);
     if (PFN != 312)
     {
-        fprintf(stderr, "TLB lookup of VPN returned %d, expected 312\n");
+        fprintf(stderr, "TLB lookup of VPN returned %d, expected 312\n", PFN);
         return 1;
     }
 
     PFN = TLB_lookup(tlb, 66);
     if (PFN != 1024)
     {
-        fprintf(stderr, "TLB lookup of VPN returned %d, expected 1024\n");
+        fprintf(stderr, "TLB lookup of VPN returned %d, expected 1024\n", PFN);
         return 1;
     }
 
     PFN = TLB_lookup(tlb, 67);
     if (PFN != 0)
     {
-        fprintf(stderr, "TLB lookup of VPN returned %d, expected 0\n");
+        fprintf(stderr, "TLB lookup of VPN returned %d, expected 0\n", PFN);
         return 1;
     }
 

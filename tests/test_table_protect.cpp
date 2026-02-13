@@ -34,6 +34,7 @@ int main(int argc, char** argv)
     if (not exception)
     {
         fprintf(stderr, "Expected PROTECTION FAULT but no error was thrown\n");
+        return 1;
     }
 
 
@@ -55,6 +56,7 @@ int main(int argc, char** argv)
     if (not exception)
     {
         fprintf(stderr, "Expected PROTECTION FAULT but no error was thrown\n");
+        return 1;
     }
 
 
@@ -76,6 +78,7 @@ int main(int argc, char** argv)
     if (not exception)
     {
         fprintf(stderr, "Expected PROTECTION FAULT but no error was thrown\n");
+        return 1;
     }
 
 
@@ -97,6 +100,7 @@ int main(int argc, char** argv)
     if (not exception)
     {
         fprintf(stderr, "Expected PROTECTION FAULT but no error was thrown\n");
+        return 1;
     }
 
 
