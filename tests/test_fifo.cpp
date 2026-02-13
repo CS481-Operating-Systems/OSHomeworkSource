@@ -1,21 +1,8 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 
-}
-
-TEST(VPNTest, TestsIntests)
-{
     FrameList* remove_frame;
     int count;
     int idx = 0;
@@ -29,19 +16,32 @@ TEST(VPNTest, TestsIntests)
     }
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(remove_frame->idx, 0);
+    if (remove_frame->idx != 0)
+    {
+        fprintf(stderr, "After first removal, remove_frame->idx = %d, expected to be 0\n", remove_frame->idx);
+        return 1;
+    }
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(remove_frame->idx, 1);
+    if (remove_frame->idx != 1)
+    {
+        fprintf(stderr, "After first removal, remove_frame->idx = %d, expected to be 1\n", remove_frame->idx);
+        return 1;
+    }
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(remove_frame->idx, 2);
+    if (remove_frame->idx != 2)
+    {
+        fprintf(stderr, "After first removal, remove_frame->idx = %d, expected to be 2\n", remove_frame->idx);
+        return 1;
+    }
+
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
@@ -53,7 +53,12 @@ TEST(VPNTest, TestsIntests)
         tail = next;
     }
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(remove_frame->idx, 3);
+    if (remove_frame->idx != 3)
+    {
+        fprintf(stderr, "After first removal, remove_frame->idx = %d, expected to be 3\n", remove_frame->idx);
+        return 1;
+    }
+
 
 
 }

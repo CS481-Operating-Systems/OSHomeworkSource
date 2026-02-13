@@ -1,44 +1,50 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(PageTableTest, TestsIntests)
-{
     int PFN;
     PageTable* table = new PageTable(16);
     TLB* tlb = new TLB(4,2);
+    printf("Adding page with VPN 4, PFN 16, protect bit 0, valid bit 1\n");
     table->add_page(4, 16, 0, 1);
+    printf("Adding page with VPN 6, PFN 25, protect bit 0, valid bit 1\n");
     table->add_page(6, 25, 0, 1);
+    printf("Adding page with VPN 8, PFN 0, protect bit 0, valid bit 1\n");
     table->add_page(8, 0, 0, 1);
+    printf("Adding page with VPN 15, PFN 2, protect bit 0, valid bit 1\n");
     table->add_page(15, 2, 0, 1);
 
     PFN = table_lookup(table, tlb, 4);
     PFN = TLB_lookup(tlb, 4);
-    ASSERT_EQ(PFN, 16);
+    if (PFN != 16)
+    {
+        fprintf("TLB lookup for VPN 4 expected 16, but instead got %d\n", PFN);
+        return 1;
+    }
 
     PFN = table_lookup(table, tlb, 6);
     PFN = TLB_lookup(tlb, 6);    
-    ASSERT_EQ(PFN, 25);
+    if (PFN != 25)
+    {
+        fprintf("TLB lookup for VPN 4 expected 25, but instead got %d\n", PFN);
+        return 1;
+    }
 
     PFN = table_lookup(table, tlb, 8);
     PFN = TLB_lookup(tlb, 8);    
-    ASSERT_EQ(PFN, 0);
+    if (PFN != 8)
+    {
+        fprintf("TLB lookup for VPN 4 expected 8, but instead got %d\n", PFN);
+        return 1;
+    }
 
     PFN = table_lookup(table, tlb, 15);
     PFN = TLB_lookup(tlb, 15);    
-    ASSERT_EQ(PFN, 2);
+    if (PFN != 2)
+    {
+        fprintf("TLB lookup for VPN 4 expected 2, but instead got %d\n", PFN);
+        return 1;
+    }
 
 
     delete tlb;

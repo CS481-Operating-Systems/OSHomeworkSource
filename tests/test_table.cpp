@@ -1,32 +1,26 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(PageTableTest, TestsIntests)
 {
     int PFN;
     bool exception;
     PageTable* table = new PageTable(16);
     TLB* tlb = new TLB(4,2);
+    printf("Adding page with VPN 4, PFN 16, protect bit 0, valid bit 1\n");
     table->add_page(4, 16, 0, 1);
+    printf("Adding page with VPN 6, PFN 25, protect bit 1, valid bit 1\n");
     table->add_page(6, 25, 1, 1);
+    printf("Adding page with VPN 8, PFN 0, protect bit 1, valid bit 0\n");
     table->add_page(8, 0, 1, 0);
+    printf("Adding page with VPN 15, PFN 2, protect bit 0, valid bit 0\n");
     table->add_page(15, 2, 0, 0);
 
     PFN = table_lookup(table, tlb, 4);
-    ASSERT_EQ(PFN, 16);
+    if (PFN != 16)
+    {
+        fprintf(stderr, "table lookup for VPN 4 expected 16, but instead got %d\n", PFN);
+        return 1;
+    }
 
     try
     {
@@ -35,10 +29,19 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PROTECT_FAULT);
+        if (strcmp(msg, PROTECT_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 6, Expected PROTECT FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
     ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "table lookup for VPN 6 expected protection fault but instead succeeded.\n", PFN);
+        return 1;
+    }
 
 
     try
@@ -48,10 +51,19 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 8, Expected SEGFAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
     ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "table lookup for VPN 8 expected segfault but instead succeeded.\n", PFN);
+        return 1;
+    }
 
 
     try
@@ -61,10 +73,20 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 15, Expected SEGFAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
     ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "table lookup for VPN 15 expected segfault but instead succeeded.\n", PFN);
+        return 1;
+    }
+
 
 
     try
@@ -74,10 +96,20 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PAGE_FAULT);
+        if (strcmp(msg, PAGE_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 2, Expected PAGE FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
     ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "table lookup for VPN 2 expected page fault but instead succeeded.\n", PFN);
+        return 1;
+    }
+
 
 
     delete tlb;

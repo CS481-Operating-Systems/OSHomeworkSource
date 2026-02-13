@@ -1,81 +1,111 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(PageTableTest, TestsIntests)
 {
     int PFN;
     bool exception;
     PageTable* table = new PageTable(16);
     TLB* tlb = new TLB(4,2);
+    printf("Adding page with VPN 4, PFN 16, protect bit 1, valid bit 0\n");
     table->add_page(4, 16, 1, 0);
+    printf("Adding page with VPN 6, PFN 25, protect bit 1, valid bit 0\n");
     table->add_page(6, 25, 1, 0);
+    printf("Adding page with VPN 8, PFN 0, protect bit 1, valid bit 0\n");
     table->add_page(8, 0, 1, 0);
+    printf("Adding page with VPN 15, PFN 2, protect bit 1, valid bit 0\n");
     table->add_page(15, 2, 1, 0);
 
 
     try
     {
         exception = false;
+        printf("Looking up page 4\n");
         PFN = table_lookup(table, tlb, 4);
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "Expected SEGFAULT but got %s\n", msg);
+            return 1;
+        }
         exception = true;
+    }    
+    if (not exception)
+    {
+        fprintf(stderr, "Expected SEGFAULT but received no exception\n");
+        return 1;
     }
-    ASSERT_EQ(exception, true);
+
 
 
     try
     {
         exception = false;
+        printf("Looking up page 6\n");
         PFN = table_lookup(table, tlb, 6);
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "Expected SEGFAULT but got %s\n", msg);
+            return 1;
+        }
         exception = true;
+    }    
+    if (not exception)
+    {
+        fprintf(stderr, "Expected SEGFAULT but received no exception\n");
+        return 1;
     }
-    ASSERT_EQ(exception, true);
+
 
 
     try
     {
         exception = false;
+        printf("Looking up page 8\n");
         PFN = table_lookup(table, tlb, 8);
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "Expected SEGFAULT but got %s\n", msg);
+            return 1;
+        }
         exception = true;
+    }    
+    if (not exception)
+    {
+        fprintf(stderr, "Expected SEGFAULT but received no exception\n");
+        return 1;
     }
-    ASSERT_EQ(exception, true);
+
 
 
     try
     {
         exception = false;
+        printf("Looking up page 15\n");
         PFN = table_lookup(table, tlb, 15);
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "Expected SEGFAULT but got %s\n", msg);
+            return 1;
+        }
         exception = true;
+    }    
+    if (not exception)
+    {
+        fprintf(stderr, "Expected SEGFAULT but received no exception\n");
+        return 1;
     }
-    ASSERT_EQ(exception, true);
+
 
 
 

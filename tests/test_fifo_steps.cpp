@@ -1,50 +1,51 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(VPNTest, TestsIntests)
-{
     FrameList* remove_frame;
     int count;
     int idx = 0;
+    printf("Adding head, idx %d\n", idx);    
     FrameList* head = new FrameList(idx++);
     FrameList* tail = head;
     for (int i = 0; i < 10; i++)
     {
+        printf("Adding next frame, idx %d\n", idx);
         FrameList* next = new FrameList(idx++);
         tail->next = next;
         tail = next;
     }
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(count, 1);
+    if (count != 1)
+    {
+        fprintf(stderr, "After first removal, count = %d, expected to be 1\n", count);
+        return 1;
+    }
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(count, 1);
+    if (count != 1)
+    {
+        fprintf(stderr, "After first removal, count = %d, expected to be 1\n", count);
+        return 1;
+    }
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
 
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(count, 1);
+    if (count != 1)
+    {
+        fprintf(stderr, "After first removal, count = %d, expected to be 1\n", count);
+        return 1;
+    }
     tail = remove_frame->next;
     delete remove_frame;
     head = tail;
+
 
     for (int i = 3; i < 10; i++)
     {
@@ -53,6 +54,9 @@ TEST(VPNTest, TestsIntests)
         tail = next;
     }
     count = fifo(head, &remove_frame);
-    ASSERT_EQ(count, 1);
+    if (count != 1)
+    {
+        fprintf(stderr, "After first removal, count = %d, expected to be 1\n", count);
+        return 1;
+    }
 }
-

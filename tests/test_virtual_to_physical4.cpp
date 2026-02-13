@@ -1,27 +1,17 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(PageTableTest, TestsIntests)
-{
     bool exception;
     PageTable* table = new PageTable(16);
     TLB* tlb = new TLB(4,2);
+    printf("Adding page with VPN 4, PFN 16, protect bit 0, valid bit 1\n");
     table->add_page(4, 16, 0, 1);
+    printf("Adding page with VPN 6, PFN 25, protect bit 1, valid bit 1\n");
     table->add_page(6, 25, 1, 1);
+    printf("Adding page with VPN 8, PFN 0, protect bit 1, valid bit 0\n");
     table->add_page(8, 0, 1, 0);
+    printf("Adding page with VPN 15, PFN 2, protect bit 0, valid bit 0\n");
     table->add_page(15, 2, 0, 0);
 
     int addr;
@@ -35,21 +25,35 @@ TEST(PageTableTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, SEG_FAULT);
+        if (strcmp(msg, SEG_FAULT) != 0)
+        {
+            fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "Virtual Address %d, page size %d, expected SEGFAULT but succeeded\n", msg);
+        return 1;
+    }
 
     table->add_page(15, 12, 0, 1);
     tlb->add_entry(3, 3, table->entries[15]);
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
-    ASSERT_EQ(addr, 96);
+    if (addr != 96)
+    {
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 96\n");
+        return 1;
+    }
 
     virtual_address = 127;
     addr = virtual_to_physical(virtual_address, page_size, tlb, table);
-    ASSERT_EQ(addr, 103);
-
-
+    if (addr != 103)
+    {
+        fprintf(stderr, "Virtual Address %d, Page size %d, returned physical address %d but expected 103\n");
+        return 1;
+    }
 
 
     delete tlb;

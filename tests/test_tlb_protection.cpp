@@ -1,35 +1,29 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(TLBTest, TestsIntests)
 {
     int PFN;
     bool exception;
 
     PageTable* table = new PageTable(128);
+    printf("Adding page with VPN 64, PFN 256, protect bit 1, valid bit 1\n");
     table->add_page(64, 256, 1, 1);
+    printf("Adding page with VPN 65, PFN 312, protect bit 1, valid bit 1\n");
     table->add_page(65, 312, 1, 1);
+    printf("Adding page with VPN 66, PFN 1024, protect bit 1, valid bit 1\n");
     table->add_page(66, 1024, 1, 1);
+    printf("Adding page with VPN 67, PFN 0, protect bit 1, valid bit 1\n");
     table->add_page(67, 0, 1, 1);
 
 
     TLB* tlb = new TLB(4,4);
+    printf("Adding VPN 64 to TLB\n");
     tlb->add_entry(0, 16, table->entries[64]);
+    printf("Adding VPN 65 to TLB\n");
     tlb->add_entry(1, 16, table->entries[65]);
+    printf("Adding VPN 66 to TLB\n");
     tlb->add_entry(2, 16, table->entries[66]);
+    printf("Adding VPN 67 to TLB\n");
     tlb->add_entry(3, 16, table->entries[67]);
 
 
@@ -40,10 +34,18 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PROTECT_FAULT);
+        if (strcmp(msg, PROTECT_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 64, Expected PROTECT FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "VPN 64, expected PROTECT FAULT but succeeded\n");
+        return 1;
+    }
 
     try
     {
@@ -52,10 +54,19 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PROTECT_FAULT);
+        if (strcmp(msg, PROTECT_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 65, Expected PROTECT FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "VPN 64, expected PROTECT FAULT but succeeded\n");
+        return 1;
+    }
+
 
     try
     {
@@ -64,10 +75,19 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PROTECT_FAULT);
+        if (strcmp(msg, PROTECT_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 66, Expected PROTECT FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "VPN 64, expected PROTECT FAULT but succeeded\n");
+        return 1;
+    }
+
 
     try
     {
@@ -76,10 +96,19 @@ TEST(TLBTest, TestsIntests)
     }
     catch (const char* msg)
     {
-        ASSERT_STREQ(msg, PROTECT_FAULT);
+        if (strcmp(msg, PROTECT_FAULT) != 0)
+        {
+            fprintf(stderr, "VPN 67, Expected PROTECT FAULT but instead got %s\n", msg);
+            return 1;
+        }
         exception = true;
     }
-    ASSERT_EQ(exception, true);
+    if (not exception)
+    {
+        fprintf(stderr, "VPN 64, expected PROTECT FAULT but succeeded\n");
+        return 1;
+    }
+
 
 
     

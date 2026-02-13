@@ -1,20 +1,12 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
-int main(int argc, char** argv)
+void print_err(PFN, offset, page_size, addr, expected)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
+    fprintf(stderr, "Physical address of PFN %d, offset %d, page size %d: returned %d, should be %d\n", 
+                PFN, offset, page_size, addr, expected);
 }
 
-TEST(PageTableTest, TestsIntests)
+int main(int argc, char** argv)
 {
     int addr;
 
@@ -22,20 +14,37 @@ TEST(PageTableTest, TestsIntests)
     int offset = 0;
     int PFN = 2;
     addr = get_physical_address(PFN, offset, page_size);
-    ASSERT_EQ(addr, 8);
+    if (addr != 8)
+    {
+        print_err(PFN, offset, page_size, addr, 8);
+        return 1;
+    }
 
     offset = 1;
     addr = get_physical_address(PFN, offset, page_size);
     ASSERT_EQ(addr, 9);
+    if (addr != 9)
+    {
+        print_err(PFN, offset, page_size, addr, 9);
+        return 9;
+    }
 
     page_size = 16;
     offset = 0;
     PFN = 8;
     addr = get_physical_address(PFN, offset, page_size);
-    ASSERT_EQ(addr, 128);
+    if (addr != 128)
+    {
+        print_err(PFN, offset, page_size, addr, 128);
+        return 1;
+    }
 
     offset = 8;
     addr = get_physical_address(PFN, offset, page_size);
-    ASSERT_EQ(addr, 136);
+    if (addr != 136)
+    {
+        print_err(PFN, offset, page_size, addr, 136);
+        return 1;
+    }
 
 }
