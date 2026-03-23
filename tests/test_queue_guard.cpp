@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 lock_t my_lock;
@@ -35,16 +28,14 @@ void* thread1(void* arg)
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-TEST(TLBTest, TestsIntests)
-{
     init(&my_lock);
     first = false;
     finished0 = finished1 = false;
-    ASSERT_EQ(my_lock.queue.initialized, 1234);
+    if (my_lock.queue.initialized != 1234)
+    {
+        fprintf(stderr, "Queue lock was not initialized\n");
+        return -1;
+    }
 
     pthread_t pthread0;
     pthread_t pthread1;
@@ -53,7 +44,11 @@ TEST(TLBTest, TestsIntests)
     pthread_create(&pthread1, NULL, thread1, NULL);
     while (!finished0)
     {
-        ASSERT_LT(my_lock.guard, 2);
+        if(my_lock.guard >= 2)
+        {
+            fprintf(stderr, "Guard is %d\n", my_lock.guard); 
+            return -1;
+        }
     }
     while (!finished1)
     {

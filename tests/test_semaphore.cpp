@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 #include <sys/time.h>
 
@@ -61,18 +54,12 @@ void* thread_timeout(void* arg)
     return NULL;
 }
 
-int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
 void timer_handler(int signum)
 {
     timed_out = true;
 }
 
-TEST(TLBTest, TestsIntests)
+int main(int argc, char** argv)
 {
     init(&my_lock);
     first = false;
@@ -92,16 +79,17 @@ TEST(TLBTest, TestsIntests)
     pthread_join(pthread0, NULL);
     pthread_join(pthread1, NULL);
 
-    ASSERT_EQ(thread0bool, true);
-    ASSERT_EQ(thread1bool, true);
-
-    //timed_out = false;
-    //pthread_create(&pthread0, NULL, thread_timeout, NULL);
-    //sleep(1);
-    //pthread_kill(pthread0, SIGUSR1);
-    //pthread_join(pthread0, NULL);
-    //ASSERT_EQ(timed_out, true);
-
+    
+    if (thread0bool != true)
+    {
+        fprintf(stderr, "Issue with semaphore lock, value of S was not correct when checked.");
+        return -1;
+    }  
+    if (thread1bool != true)
+    {
+        fprintf(stderr, "Issue with semaphore lock, value of S was not correct when checked.");
+        return -1;
+    }  
 
     destroy(&my_lock);
 }

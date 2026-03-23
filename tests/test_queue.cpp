@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 lock_t my_lock;
@@ -63,17 +56,15 @@ void* thread1(void* arg)
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-TEST(TLBTest, TestsIntests)
-{
     init(&my_lock);
     finished0 = finished1 = false;
     flag_bool = true;
     guard_bool = true;
-    ASSERT_EQ(my_lock.queue.initialized, 1234);
+    if (my_lock.queue.initialized != 1234)
+    {
+        fprintf(stderr, "Queue lock is not initialized\n");
+        return -1;
+    }
 
     pthread_t pthread0;
     pthread_t pthread1;
@@ -91,9 +82,22 @@ TEST(TLBTest, TestsIntests)
     pthread_create(&pthread1, NULL, thread1, NULL);
 
     pthread_join(pthread0, NULL);
-    ASSERT_EQ(flag_bool, true);
-    ASSERT_EQ(guard_bool, true);
-    ASSERT_EQ(is_queue_empty, true);
+    if (flag_bool != true)
+    {
+        fprintf(stderr, "Thread 0 did not hold onto the flag\n");
+        return -1;
+    }
+    if (guard_bool != true)
+    {
+        fprintf(stderr, "Thread 0 had invalid guard number\n");
+        return -1;
+
+    }
+    if (is_queue_empty != true)
+    {
+        fprintf(stderr, "Thread 0 found item in queue (it was expected to be empty).\n");
+        return -1;
+    }
 
     // Possible for pause to cause thread to get stuck
     // This will make sure they wake up

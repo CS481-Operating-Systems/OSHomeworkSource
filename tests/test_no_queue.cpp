@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 lock_t my_lock;
@@ -41,14 +34,12 @@ void* thread1(void* arg)
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-TEST(TLBTest, TestsIntests)
-{
     init(&my_lock);
-    ASSERT_EQ(my_lock.queue.initialized, 1234);
+    if (my_lock.queue.initialized != 1234)
+    {
+        fprintf(stderr, "Lock is not initialized\n");
+        return -1;
+    }
 
     finished0 = 0;
     finished1 = 0;
@@ -59,23 +50,70 @@ TEST(TLBTest, TestsIntests)
     // Create thread 0, wait for it to finish
     pthread_create(&pthread0, NULL, thread0, NULL);
     while (!finished0)
-        ASSERT_LT(my_lock.guard, 2);
+    {
+        if (my_lock.guard >= 2)
+        {
+            fprintf(stderr, "Guard is >= 2\n");
+            return -1;
+        }
+    }
+
     pthread_join(pthread0, NULL);
-    ASSERT_EQ(my_lock.flag, 0);
-    ASSERT_EQ(my_lock.guard, 0);
+    if (my_lock.flag != 0)
+    {
+        fprintf(stderr, "At end of program, flag is %d\n", my_lock.flag);
+        return -1;
+    }
+    if (my_lock.guard != 0)
+    {
+        fprintf(stderr, "At end of program, guard is %d\n", my_lock.guard);
+        return -1;
+    }
 
     // Create thread 1, wait for it to finish
     pthread_create(&pthread1, NULL, thread1, NULL);
-    while (!finished1)
-        ASSERT_LT(my_lock.guard, 2);
+    while (!finished0)
+    {
+        if (my_lock.guard >= 2)
+        {
+            fprintf(stderr, "Guard is >= 2\n");
+            return -1;
+        }
+    }
     pthread_join(pthread1, NULL);
-    ASSERT_EQ(my_lock.flag, 0);
-    ASSERT_EQ(my_lock.guard, 0);
+    if (my_lock.flag != 0)
+    {
+        fprintf(stderr, "At end of program, flag is %d\n", my_lock.flag);
+        return -1;
+    }
+    if (my_lock.guard != 0)
+    {
+        fprintf(stderr, "At end of program, guard is %d\n", my_lock.guard);
+        return -1;
+    }
 
-    ASSERT_EQ(flag0, 1);
-    ASSERT_EQ(flag1, 1);
-    ASSERT_EQ(flag2, 1);
-    ASSERT_EQ(flag3, 0);
+    if (flag0 != 1)
+    {
+        fprintf(stderr, "Thread 0 got the lock but flag value was %d\n", flag0);
+        return -1;
+    }
+    if (flag1 != 1)
+    {
+        fprintf(stderr, "Thread 0 got the lock but flag value was %d\n", flag1);
+        return -1;
+    }
+
+    if (flag2 != 1)
+    {
+        fprintf(stderr, "Thread 1 got the lock but flag value was %d\n", flag2);
+        return -1;
+    }
+
+    if (flag3 != 0)
+    {
+        fprintf(stderr, "Thread 1 released lock at end of the program, but flag value was %d\n", flag3);
+        return -1;
+    }
 
     destroy(&my_lock);
 }

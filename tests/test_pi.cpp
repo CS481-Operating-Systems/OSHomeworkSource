@@ -1,20 +1,7 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 #include <math.h>
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-TEST(TLBTest, TestsIntests)
 {
     double global_sum, serial_global_sum;
     
@@ -27,7 +14,12 @@ TEST(TLBTest, TestsIntests)
         {
             n_threads = pow(2, i);
             global_sum = pthread_compute_pi(n_threads, global_n);
-            ASSERT_NEAR(serial_global_sum, global_sum, 0.2);
+            if (fabs(serial_global_sum - global_sum) > 0.2)
+            {
+                printf("Serial pi calculation was %e but your pi calculation was %e\n",
+                        serial_global_sum, global_sum);
+                return -1;
+            }
         }
         
         global_n *= 10;

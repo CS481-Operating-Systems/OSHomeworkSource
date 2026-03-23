@@ -1,10 +1,3 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
 
 lock_t my_lock;
@@ -31,12 +24,6 @@ void* thread(void* arg)
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-TEST(TLBTest, TestsIntests)
-{
     init(&my_lock);
 
     int n_threads = 10;
@@ -61,7 +48,11 @@ TEST(TLBTest, TestsIntests)
         pthread_join(threads[i], NULL);
     }
 
-    ASSERT_EQ(value, n_threads*n_loops);
+    if (value != n_threads*n_loops)
+    {
+        fprintf(stderr, "All threads are updating shared variable, which has value %d but should have %d\n", value, n_threads*n_loops);
+        return -1;
+    }
 
     destroy(&my_lock);
 }
