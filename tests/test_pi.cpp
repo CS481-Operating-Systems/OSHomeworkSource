@@ -6,9 +6,10 @@ int main(int argc, char** argv)
     double global_sum, serial_global_sum;
     
     int global_n = 1000;
+    rand_init(global_n);
     int n_threads;
     for (int iter = 0; iter < 3; iter++)
-    {
+   {
         serial_global_sum = serial_compute_pi(global_n, 0);
         for (int i = 0; i < 4; i++)
         {

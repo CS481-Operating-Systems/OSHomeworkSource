@@ -2,6 +2,10 @@
 #include <random>
 #include <thread>
 
+std::vector<int> rand_list;
+std::atomic<int> rand_idx{0};
+int global_n;
+
 
 // Initialize Queue Methods
 void queue_init(queue_t& queue)
@@ -79,22 +83,24 @@ double pthread_compute_pi(int num_threads, int num_samples)
 }
 
 // Thread Safe Random Value Generator 
-void rand_init(int global_n)
+void rand_init(int _global_n)
 {
-
+    global_n = _global_n;
+    srand(time(NULL));
+    for (int i = 0; i < global_n; i++)
+        rand_list.push_back(rand());
+    rand_idx = 0;
 }
 
 void rand_destroy()
 {
+
 }
 
-int thread_rand()
+double thread_rand()
 {
-    size_t tid = std::hash<std::thread::id>{}(std::this_thread::get_id());
-    thread_local static std::mt19937 gen(time(NULL) + tid);
-    std::uniform_int_distribution<int> dist(1, RAND_MAX);
-
-    return dist(gen);
+    int idx = rand_idx.fetch_add(1, std::memory_order_relaxed);
+    return rand_list[idx%global_n];
 }
 
 double serial_compute_pi(int num_samples, int init_rand)

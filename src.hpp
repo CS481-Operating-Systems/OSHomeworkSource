@@ -10,6 +10,9 @@
 #include <queue>
 #include <signal.h>
 
+extern std::vector<int> rand_list;
+extern std::atomic<int> rand_idx;
+
 // Queue Struct
 typedef struct __node_t
 {
@@ -78,6 +81,6 @@ double serial_compute_pi(int num_samples, int init_rand = 1);
 // Thread Safe Random Value Generator 
 void rand_init(int global_n);
 void rand_destroy();
-int thread_rand();
+double thread_rand();
 
 #endif
