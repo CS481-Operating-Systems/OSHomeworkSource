@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <queue>
 #include <signal.h>
+#include <atomic>
 
 extern std::vector<int> rand_list;
 extern std::atomic<int> rand_idx;
