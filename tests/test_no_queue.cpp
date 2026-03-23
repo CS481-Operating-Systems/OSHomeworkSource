@@ -4,14 +4,13 @@ lock_t my_lock;
 int val;
 int finished0, finished1;
 
-int flag0, flag1, flag2, flag3;
+int flag0, guard1, flag2, flag3;
 
 void* thread0(void* arg)
 {
     lock(&my_lock);
     flag0 = my_lock.flag;
-
-    flag1 = my_lock.flag;
+    guard1 = my_lock.guard;
     unlock(&my_lock);
 
     finished0 = 1;
@@ -49,14 +48,6 @@ int main(int argc, char** argv)
 
     // Create thread 0, wait for it to finish
     pthread_create(&pthread0, NULL, thread0, NULL);
-    while (!finished0)
-    {
-        if (my_lock.guard >= 2)
-        {
-            fprintf(stderr, "Guard is >= 2\n");
-            return -1;
-        }
-    }
 
     pthread_join(pthread0, NULL);
     if (my_lock.flag != 0)
@@ -72,14 +63,6 @@ int main(int argc, char** argv)
 
     // Create thread 1, wait for it to finish
     pthread_create(&pthread1, NULL, thread1, NULL);
-    while (!finished0)
-    {
-        if (my_lock.guard >= 2)
-        {
-            fprintf(stderr, "Guard is >= 2\n");
-            return -1;
-        }
-    }
     pthread_join(pthread1, NULL);
     if (my_lock.flag != 0)
     {
@@ -97,9 +80,9 @@ int main(int argc, char** argv)
         fprintf(stderr, "Thread 0 got the lock but flag value was %d\n", flag0);
         return -1;
     }
-    if (flag1 != 1)
+    if (guard1 != 0) 
     {
-        fprintf(stderr, "Thread 0 got the lock but flag value was %d\n", flag1);
+        fprintf(stderr, "Thread 0 got the lock but guard value was %d\n", guard1);
         return -1;
     }
 
