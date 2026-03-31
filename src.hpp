@@ -11,6 +11,8 @@
 #include <signal.h>
 #include <atomic>
 
+#define rand() thread_rand()
+
 extern std::vector<int> rand_list;
 extern std::atomic<int> rand_idx;
 

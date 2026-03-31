@@ -85,22 +85,22 @@ double pthread_compute_pi(int num_threads, int num_samples)
 // Thread Safe Random Value Generator 
 void rand_init(int _global_n)
 {
-    global_n = _global_n;
-    srand(time(NULL));
-    for (int i = 0; i < global_n; i++)
-        rand_list.push_back(rand());
-    rand_idx = 0;
 }
 
 void rand_destroy()
 {
-
 }
-
+thread_local uint64_t state = 88172645463325252ull;
+static inline uint64_t xorshift64(uint64_t& x)
+{
+    x ^= x << 13;
+    x ^= x >> 7;
+    x ^= x << 17;
+    return x;
+}
 double thread_rand()
 {
-    int idx = rand_idx.fetch_add(1, std::memory_order_relaxed);
-    return rand_list[idx%global_n];
+    return (xorshift64(state) >> 11) * (1.0 / (1ULL << 53)) * RAND_MAX;
 }
 
 double serial_compute_pi(int num_samples, int init_rand)
