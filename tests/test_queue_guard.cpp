@@ -3,13 +3,14 @@
 lock_t my_lock;
 int val;
 bool first;
-bool finished0, finished1;
+volatile bool finished0, finished1;
 bool thread0bool, thread1bool;
 
 void* thread0(void* arg)
 {
     lock(&my_lock);
     unlock(&my_lock);
+    __sync_synchronize();
     finished0 = true;
 
     return NULL;
@@ -21,6 +22,7 @@ void* thread1(void* arg)
 
     lock(&my_lock);
     unlock(&my_lock);
+    __sync_synchronize();
     finished1 = true;
 
     return NULL;

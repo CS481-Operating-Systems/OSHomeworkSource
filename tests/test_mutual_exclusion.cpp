@@ -17,6 +17,7 @@ void* thread(void* arg)
     for (int i = 0; i < n_loops; i++) 
         value++;
     unlock(&my_lock);
+    __sync_synchronize();
 
     finished[*id] = 1;
     return NULL;   
