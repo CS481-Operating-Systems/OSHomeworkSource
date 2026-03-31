@@ -51,7 +51,7 @@ add_test(SemaphoreMutualExclusion ./semaphore_mutual_exclusion)
 
 add_executable(queue_mutual_exclusion test_mutual_exclusion.cpp)
 target_link_libraries(queue_mutual_exclusion queue )
-#add_test(QueueMutualExclusion ./queue_mutual_exclusion)
+add_test(QueueMutualExclusion ./queue_mutual_exclusion)
 
 
 ### PI Tests
