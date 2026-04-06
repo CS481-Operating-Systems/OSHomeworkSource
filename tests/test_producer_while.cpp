@@ -1,21 +1,7 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
-
+#include "stdio.h"
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(TLBTest, TestsIntests)
 {
     buffer_t* buf = (buffer_t*)malloc(sizeof(buffer_t));
 
@@ -47,8 +33,13 @@ TEST(TLBTest, TestsIntests)
 
     int* return_val;
     pthread_join(consumer, (void**)&return_val);
-    ASSERT_EQ(*return_val, init_val);
+    if (*return_val != init_val)
+    {
+        fprintf(stderr, "Expected return value %d, got %d\n", init_val, *return_val);
+        return -1;
+    }
 
     destroy(buf);
     free(buf);
+    return 0;
 }
