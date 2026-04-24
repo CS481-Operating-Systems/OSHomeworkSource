@@ -1,20 +1,7 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
+#include <cstring>
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(TLBTest, TestsIntests)
 {
     char txb[] = "txe12";
     char ib[] = "ib";
@@ -35,7 +22,10 @@ TEST(TLBTest, TestsIntests)
     file_bytes[size-1] = '\0';
     read(fd, file_bytes, size);
 
-    ASSERT_STREQ(file_bytes, sol);
+    if (std::strcmp(file_bytes, sol) != 0) {
+        fprintf(stderr, "File does not match input\n");
+        return -1;
+    }
     
     close(fd);
 }

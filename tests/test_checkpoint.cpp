@@ -1,20 +1,7 @@
-// EXPECT_EQ and ASSERT_EQ are macros
-// EXPECT_EQ test execution and continues even if there is a failure
-// ASSERT_EQ test execution and aborts if there is a failure
-// The ASSERT_* variants abort the program execution if an assertion fails 
-// while EXPECT_* variants continue with the run.
-
-#include "gtest/gtest.h"
 #include "src.hpp"
+#include <cstring>
 
 int main(int argc, char** argv)
-{
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-
-}
-
-TEST(TLBTest, TestsIntests)
 {
     char journal_name[] = "journal.txt";
     char data_name[] = "data.txt";
@@ -31,7 +18,11 @@ TEST(TLBTest, TestsIntests)
     sleep(1);
 
     int err = checkpoint(sizeof(txe), txe);
-    ASSERT_EQ(err, 0);
+    if (err != 0)
+    {
+        fprintf(stderr, "Error while checkpointing\n");
+        return -1;
+    }
 
     sleep(1);
 
@@ -43,7 +34,11 @@ TEST(TLBTest, TestsIntests)
     struct stat st;
     stat(journal_name, &st);
     int size = st.st_size + 1;
-    ASSERT_GT(size, 0);
+    if (size <= 0)
+    {
+        fprintf(stderr, "Journal size was %d\n", size);
+        return -1;
+    }
 
     char* journal_bytes = (char*)malloc(size);
     char* data_bytes = (char*)malloc(size);
@@ -51,8 +46,14 @@ TEST(TLBTest, TestsIntests)
     read(fd2, data_bytes, size);
     journal_bytes[size-1] = '\0';
     data_bytes[size-1] = '\0';
-    ASSERT_STREQ(data_bytes, journal_bytes);
-    ASSERT_STREQ(sol, data_bytes);
+    if (std::strcmp(data_bytes, journal_bytes) != 0) {
+        fprintf(stderr, "Data and journal strings are not the same\n");
+        return -1;
+    }
+    if (std::strcmp(sol, data_bytes) != 0) {
+        fprintf(stderr, "Data written is not the same as input\n");
+        return -1;
+    }
 
     free(journal_bytes);
     free(data_bytes);
