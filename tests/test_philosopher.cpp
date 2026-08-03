@@ -10,13 +10,12 @@ int main(int argc, char** argv)
     bool* eat = (bool*)malloc(n*sizeof(bool));
     pthread_mutex_t mutex;
     pthread_mutex_init(&mutex, NULL);
+    char buf[32];
 
-    char buf[10];
-    
     for (int i = 0; i < n; i++)
     {
         eat[i] = false;
-        snprintf(buf, 10, "forks_%d", i);
+        snprintf(buf, sizeof(buf), "forks_%d_%d", getpid(), i);
 
         // If semaphore already exists, delete
         forks[i] = sem_open(buf, 0);
@@ -27,23 +26,27 @@ int main(int argc, char** argv)
         }
 
         forks[i] = sem_open(buf, O_CREAT, S_IRUSR | S_IWUSR, 1);
+        if (forks[i] == SEM_FAILED)
+        {
+            perror("sem_open");
+            return -1;
+        }
     }
 
     for (int i = 0; i < n; i++)
     {
         diners[i].forks = forks;
         diners[i].size = n;
-        diners[i].mutex = mutex;
+        diners[i].mutex = &mutex;
         diners[i].eat = eat;
         diners[i].philosopher = i;
-
         pthread_create(&(threads[i]), NULL, philosopher, &(diners[i]));
     }
 
     for (int i = 0; i < n; i++)
     {
         pthread_join(threads[i], NULL);
-        if(eat[i] != true)
+        if (eat[i] != true)
         {
             fprintf(stderr, "Philisopher %d never ate\n", i);
             return -1;
@@ -53,15 +56,13 @@ int main(int argc, char** argv)
     for (int i = 0; i < n; i++)
     {
         sem_close(forks[i]);
-        snprintf(buf, 10, "forks_%d", i);
+        snprintf(buf, sizeof(buf), "forks_%d_%d", getpid(), i);
         sem_unlink(buf);
     }
 
     pthread_mutex_destroy(&mutex);
-
     free(forks);
     free(diners);
     free(threads);
-
     return 0;
 }

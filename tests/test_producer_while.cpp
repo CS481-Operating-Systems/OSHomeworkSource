@@ -22,10 +22,10 @@ int main(int argc, char** argv)
 
     usleep(100000);
 
-    pthread_mutex_lock(&(buf->mutex));
-    pthread_cond_signal(&(buf->full));
-    pthread_cond_signal(&(buf->empty));
-    pthread_mutex_unlock(&(buf->mutex));
+    pthread_mutex_lock((buf->mutex));
+    pthread_cond_signal((buf->full));
+    pthread_cond_signal((buf->empty));
+    pthread_mutex_unlock((buf->mutex));
 
     usleep(100000);
 

@@ -41,9 +41,13 @@ void init(buffer_t* buf, int limit)
     buf->get_ctr = 0;
     buf->size = 0;
 
-    pthread_cond_init(&(buf->full), NULL);
-    pthread_cond_init(&(buf->empty), NULL);
-    pthread_mutex_init(&(buf->mutex), NULL);
+    buf->full  = new pthread_cond_t;
+    buf->empty = new pthread_cond_t;
+    buf->mutex = new pthread_mutex_t;
+
+    pthread_cond_init((buf->full), NULL);
+    pthread_cond_init((buf->empty), NULL);
+    pthread_mutex_init((buf->mutex), NULL);
 
     // If named semaphore already exists
     // delete and unlink it
@@ -83,9 +87,13 @@ void destroy(buffer_t* buf)
 {
     delete[] buf->list;
 
-    pthread_cond_destroy(&(buf->full));
-    pthread_cond_destroy(&(buf->empty));
-    pthread_mutex_destroy(&(buf->mutex));
+    pthread_cond_destroy((buf->full));
+    pthread_cond_destroy((buf->empty));
+    pthread_mutex_destroy((buf->mutex));
+
+    delete buf->full;
+    delete buf->empty;
+    delete buf->mutex;
 
     sem_close(buf->sem_empty);
     sem_close(buf->sem_full);

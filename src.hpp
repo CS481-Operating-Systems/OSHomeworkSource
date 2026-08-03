@@ -14,7 +14,7 @@ typedef struct __diners_t
 {
     sem_t** forks;
     int size;
-    pthread_mutex_t mutex;
+    pthread_mutex_t* mutex;
     int philosopher;
     bool* eat;
 } diners_t;
@@ -34,9 +34,9 @@ typedef struct __buffer_t
     int put_ctr;
     int get_ctr;
     int size;
-    pthread_cond_t empty;
-    pthread_cond_t full;
-    pthread_mutex_t mutex;
+    pthread_cond_t* empty;
+    pthread_cond_t* full;
+    pthread_mutex_t* mutex;
     sem_t* sem_empty;
     sem_t* sem_full;
 } buffer_t;
